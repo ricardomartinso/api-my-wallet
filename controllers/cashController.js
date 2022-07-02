@@ -17,14 +17,13 @@ const cashSchema = joi.object({
 
 export async function getCash(req, res) {
   const { authorization } = req.headers;
+  const tokenAuth = authorization?.replace("Bearer", "").trim();
 
   //coleta todos os registros de caixa de todos os usuarios
   const cashRegisters = await db.collection("cash_in_out").find().toArray();
 
   //acha userId do usuario e token do usuario.
-  const token = await db
-    .collection("sessions")
-    .findOne({ token: authorization });
+  const token = await db.collection("sessions").findOne({ token: tokenAuth });
 
   // acha usuario com name password e email e userId.
   const user = await db.collection("users").findOne({ _id: token.userId });
@@ -39,11 +38,14 @@ export async function getCash(req, res) {
       return true;
     }
   });
+
   res.send(cashFiltered);
 }
 
 export async function postCashIn(req, res) {
   const { authorization } = req.headers;
+  const tokenAuth = authorization?.replace("Bearer", "").trim();
+
   const { value, description, type } = req.body;
 
   const validation = cashSchema.validate({ value, description, type });
@@ -55,9 +57,8 @@ export async function postCashIn(req, res) {
   if (type !== "cash_in") {
     return res.sendStatus(400);
   }
-  const token = await db
-    .collection("sessions")
-    .findOne({ token: authorization });
+  const token = await db.collection("sessions").findOne({ token: tokenAuth });
+
   if (!token) {
     return res.sendStatus(401);
   }
@@ -81,6 +82,8 @@ export async function postCashIn(req, res) {
 }
 export async function postCashOut(req, res) {
   const { authorization } = req.headers;
+  const tokenAuth = authorization?.replace("Bearer", "").trim();
+
   const { value, description, type } = req.body;
 
   const validation = cashSchema.validate({ value, description, type });
@@ -92,9 +95,8 @@ export async function postCashOut(req, res) {
   if (type !== "cash_out") {
     return res.sendStatus(400);
   }
-  const token = await db
-    .collection("sessions")
-    .findOne({ token: authorization });
+  const token = await db.collection("sessions").findOne({ token: tokenAuth });
+
   if (!token) {
     return res.sendStatus(401);
   }
