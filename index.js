@@ -16,4 +16,4 @@ app.get("/cash", getCash);
 app.post("/cash-in", postCashIn);
 app.post("/cash-out", postCashOut);
 
-app.listen(5000);
+app.listen(process.env.PORT);

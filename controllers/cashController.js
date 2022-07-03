@@ -24,9 +24,16 @@ export async function getCash(req, res) {
 
   //acha userId do usuario e token do usuario.
   const token = await db.collection("sessions").findOne({ token: tokenAuth });
-
+  if (!token) {
+    return res.sendStatus(401);
+  }
   // acha usuario com name password e email e userId.
   const user = await db.collection("users").findOne({ _id: token.userId });
+
+  if (!user) {
+    return res.sendStatus(401);
+  }
+
   delete user.password;
 
   //filtra apenas os registros que o usuário pode ver
@@ -80,6 +87,7 @@ export async function postCashIn(req, res) {
 
   res.status(200).send(user);
 }
+
 export async function postCashOut(req, res) {
   const { authorization } = req.headers;
   const tokenAuth = authorization?.replace("Bearer", "").trim();
