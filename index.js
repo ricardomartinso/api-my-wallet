@@ -3,7 +3,8 @@ import cors from "cors";
 import router from "./routes/index.js";
 
 const app = express();
-app.use([cors(), express.json()]);
+app.use(express.json());
+app.use(cors());
 app.use(router);
 
 app.listen(process.env.PORT);
