@@ -11,6 +11,6 @@ const cashRouter = express.Router();
 
 cashRouter.get("/cash", getCash);
 cashRouter.post("/cash-in", cashSchemaValidation, postCashIn);
-cashRouter.post("cash-out", cashSchemaValidation, postCashOut);
+cashRouter.post("/cash-out", cashSchemaValidation, postCashOut);
 
 export default cashRouter;
