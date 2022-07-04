@@ -3,7 +3,7 @@ import {
   getCash,
   postCashIn,
   postCashOut,
-} from "../controllers/cashController";
+} from "../controllers/cashController.js";
 
 const cashRouter = express.Router();
 

@@ -41,7 +41,6 @@ export async function getCash(req, res) {
 
   res.send(cashFiltered);
 }
-
 export async function postCashIn(req, res) {
   const { authorization } = req.headers;
   const tokenAuth = authorization?.replace("Bearer", "").trim();
