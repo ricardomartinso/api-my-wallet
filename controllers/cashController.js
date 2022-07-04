@@ -54,6 +54,7 @@ export async function postCashIn(req, res) {
     res.status(422).send(errors);
     return;
   }
+
   if (type !== "cash_in") {
     return res.sendStatus(400);
   }
