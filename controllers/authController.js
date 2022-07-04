@@ -1,31 +1,11 @@
 import joi from "joi";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import dotenv from "dotenv";
-import { MongoClient, ObjectId } from "mongodb";
-
-dotenv.config();
-const mongoClient = new MongoClient(process.env.MONGO_URI);
-let db;
-mongoClient.connect().then(() => {
-  db = mongoClient.db("api-mywallet");
-});
+import db from "../db.js";
 
 export async function register(req, res) {
-  const registerSchema = joi.object({
-    name: joi.string().required(),
-    password: joi.string().required(),
-    email: joi.string().email().required(),
-  });
   const register = req.body;
 
-  const validate = registerSchema.validate(register, { abortEarly: false });
-
-  if (validate.error) {
-    const errors = validate.error.details.map((item) => item.message);
-    res.status(422).send(errors);
-    return;
-  }
   try {
     const encryptedPassword = bcrypt.hashSync(register.password, 10);
     await db
@@ -38,21 +18,7 @@ export async function register(req, res) {
   }
 }
 export async function login(req, res) {
-  const loginSchema = joi.object({
-    email: joi.string().email().required(),
-    password: joi.string().required(),
-  });
-  const { password, email } = req.body;
-
-  const validate = loginSchema.validate(
-    { password, email },
-    { abortEarly: false }
-  );
-  if (validate.error) {
-    const errors = validate.error.details.map((item) => item.message);
-    res.status(422).send(errors);
-    return;
-  }
+  const { email, password } = req.body;
 
   const user = await db.collection("users").findOne({ email });
 
