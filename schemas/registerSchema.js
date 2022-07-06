@@ -5,3 +5,5 @@ const registerSchema = joi.object({
   password: joi.string().required(),
   email: joi.string().email().required(),
 });
+
+export default registerSchema;
